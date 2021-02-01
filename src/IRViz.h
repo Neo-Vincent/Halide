@@ -7,6 +7,7 @@
 
 #include <map>
 #include <ostream>
+#include <sstream>
 #include <string>
 
 #include "IRVisitor.h"
@@ -27,10 +28,10 @@ class IRViz : public IRVisitor {
 public:
     virtual ~IRViz();
 
-    IRViz(std::ostream &);
+    IRViz();
 
     void visualize(Expr);
-
+    void png(Expr,std::string);
 protected:
     /** emit an expression on the output stream */
     void viz(Expr);
@@ -39,7 +40,7 @@ protected:
     void viz(Stmt);
 
     /** The stream we're outputting on */
-    std::ostream &stream;
+    std::ostringstream stream;
     // /** a map for pointer-> name*/
     // std::map<IRNode *, std::string> name_map;
     void visit(const IntImm *) override;

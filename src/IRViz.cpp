@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 #include "IRViz.h"
 
@@ -21,9 +22,8 @@ namespace Internal {
 IRViz::~IRViz() {
 }
 
-IRViz::IRViz(ostream &s)
-    : stream(s) {
-    s.setf(std::ios::fixed, std::ios::floatfield);
+IRViz::IRViz() 
+{
 }
 
 void IRViz::visualize(Expr expr)
@@ -32,7 +32,20 @@ void IRViz::visualize(Expr expr)
     viz(expr);
     stream<<"\n}\n";
 }
+void IRViz::png(Expr expr,std::string filename)
+{
+	visualize(expr);
+    std::string m_dot="temp.dot";
+    std::ofstream dot(m_dot);
+    dot<<stream.str();
 
+
+    auto retcode = system(("dot " + m_dot + " -Tpng -o " + filename).c_str());
+    if (retcode != 0)
+    {
+        std::cout << "to_png failed! To png depends on dot! Please make sure graphviz have been installed.";
+    }
+}
 
 void IRViz::viz(Expr ir) {
     ir.accept(this);
